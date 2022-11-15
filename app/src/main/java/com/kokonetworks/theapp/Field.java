@@ -16,9 +16,11 @@ class Field extends LinearLayout {
     private final SquareButton[] circles = new SquareButton[9];
     private int currentCircle;
     private Listener listener;
-
+    private boolean isGameEnded = false;
     private int score;
     private Mole mole;
+    private int position = 3;
+    private int lastScore = 0;
 
     private final int ACTIVE_TAG_KEY = 873374234;
 
@@ -67,6 +69,7 @@ class Field extends LinearLayout {
     }
 
     public void startGame() {
+        isGameEnded = false;
         resetScore();
         resetCircles();
         for (SquareButton squareButton : circles) {
@@ -74,11 +77,12 @@ class Field extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     boolean active = (boolean) view.getTag(ACTIVE_TAG_KEY);
-                    if (active) {
+                    if (active && !isGameEnded && position != currentCircle) {
                         score += mole.getCurrentLevel() * 2;
+                        listener.setScore(score);
                     } else {
-                        mole.stopHopping();
-                        listener.onGameEnded(score);
+                        view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yellow_oval));
+                        stopGame();
                     }
                 }
             });
@@ -108,6 +112,14 @@ class Field extends LinearLayout {
         });
     }
 
+    public void stopGame() {
+        isGameEnded = true;
+        mainHandler.post(() -> {
+            mole.stopHopping();
+            listener.onGameEnded(score);
+        });
+    }
+
     public Listener getListener() {
         return listener;
     }
@@ -120,5 +132,7 @@ class Field extends LinearLayout {
         void onGameEnded(int score);
 
         void onLevelChange(int level);
+
+        void setScore(int score);
     }
 }

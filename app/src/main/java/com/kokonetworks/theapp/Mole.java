@@ -31,6 +31,9 @@ class Mole {
             if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){
                 nextLevel();
             }
+            if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() == LEVELS.length) {
+                field.stopGame();
+            }
         },LEVELS[currentLevel], LEVELS[currentLevel], TimeUnit.MILLISECONDS);
     }
 
@@ -49,7 +52,7 @@ class Mole {
     }
 
     private int nextHole(){
-        int hole = new Random().nextInt(field.totalCircles()-1);
+        int hole = new Random().nextInt(field.totalCircles());
         if(hole == field.getCurrentCircle()){
             return nextHole();
         }

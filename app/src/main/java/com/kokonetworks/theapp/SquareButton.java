@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 
-class SquareButton extends androidx.appcompat.widget.AppCompatButton {
+class SquareButton extends androidx.appcompat.widget.AppCompatImageButton {
 
     public SquareButton(Context context) {
         super(context);
